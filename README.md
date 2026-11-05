@@ -5,7 +5,7 @@
 <h1 align="center">Procure</h1>
 
 <p align="center">
-  <strong>Turn procurement requirements into structured standards and supplier insights.</strong>
+  <strong>Turn procurement requirements into structured analysis, standards matches, and supplier insights.</strong>
 </p>
 
 <p align="center">
@@ -13,67 +13,82 @@
 </p>
 
 <p align="center">
-  <a href="https://procure2-delta.vercel.app/">Open the demo</a>
+  <a href="https://procure2-delta.vercel.app/">View the live demo</a>
 </p>
 
 <p align="center">
   <img alt="Next.js 16" src="https://img.shields.io/badge/Next.js-16-000000?logo=nextdotjs" />
   <img alt="React 19" src="https://img.shields.io/badge/React-19-149ECA?logo=react" />
-  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript" />
+  <img alt="TypeScript 5" src="https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript" />
   <img alt="Tailwind CSS 4" src="https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss" />
   <img alt="Prisma" src="https://img.shields.io/badge/Prisma-SQLite-2D3748?logo=prisma" />
-  <img alt="Google Gemini optional" src="https://img.shields.io/badge/Gemini-optional-8E75B2?logo=googlegemini" />
+  <img alt="Gemini optional" src="https://img.shields.io/badge/Gemini-optional-8E75B2?logo=googlegemini" />
 </p>
 
 ## Overview
 
-Procure is a prototype for exploring how procurement teams can turn a plain-language requirement into a structured analysis. The application extracts product and specification details, searches a bundled Indian Standards knowledge set, and ranks matching sample suppliers. Users can save suppliers and exchange messages and quotes in the demo workflow.
+Procure is a demonstration web application for exploring how a plain-language procurement requirement can be turned into structured product details, candidate Indian Standards, and sample supplier recommendations. It combines local, bundled reference data and deterministic matching with optional Gemini-powered extraction, research, and standards ranking.
 
-The project is designed for demonstration and experimentation, not as an authoritative source for tender or compliance decisions. The bundled standards and supplier records are limited sample data, and all standards and regulatory requirements should be checked against current official sources before use.
+This repository is a prototype, not an authoritative procurement or compliance service. Its bundled standards and supplier records are limited sample data, and AI-generated information may be incomplete or incorrect. Verify current standards, amendments, certifications, and regulatory requirements with official sources before making procurement decisions.
 
 ## Key features
 
-- **Requirement analysis:** Enter a procurement need as text and extract fields such as product, quantity, intended use, and technical requirements.
-- **Standards matching:** Search and rank records from the standards data bundled with the project. Gemini-based ranking is optional; deterministic keyword matching is available as a fallback.
-- **Research and clarification:** Show additional research, questions, and procurement checklist items. AI-researched standards are marked as requiring verification.
-- **Supplier recommendations:** Match sample suppliers to a requirement and rank them using product, standards, compliance, document, certification, and trust signals.
-- **Supplier follow-up:** Save supplier favorites, start a conversation, and submit a quote through the demo interface.
-- **Voice input:** Use browser speech recognition where supported.
+- **Requirement analysis:** Enter a procurement need in text and extract details such as product, quantity, use case, and technical requirements.
+- **Standards matching:** Search and rank candidate standards from the local data set using keyword-based matching; optional Gemini ranking can refine the order.
+- **Research and clarification:** View a structured research summary, procurement checklist, clarification questions, and verification caveats. AI-researched standards are marked for verification.
+- **Supplier recommendations:** Review sample suppliers matched and scored against the requirement and its matched standards.
+- **Supplier follow-up:** Save favorites, open supplier conversations, exchange demo messages, and submit a quote through the demo workflow.
+- **Voice input:** Dictate a requirement using browser speech recognition where supported.
 
-> **Prototype limitations:** The dashboard includes a file picker, but selected files are not uploaded or parsed; the analyzer receives the text in the input field. The sign-in, OTP, and verification screens are a demo UI, not production authentication. AI results and bundled supplier and standards data require independent verification.
+> **Prototype limitations:** The dashboard's file picker does not upload or parse the selected document; analysis runs on the text in the input field. Supplier replies are generated by demo logic, and the sign-in/verification experience is not production authentication.
 
 ## Technology stack
 
 | Area | Technologies |
 | --- | --- |
 | Web application | Next.js 16 App Router, React 19 |
-| Language | TypeScript |
+| Language | TypeScript 5 |
 | Styling | Tailwind CSS 4 |
-| Data layer | Prisma schema for SQLite; local JSON fallback in the demo |
+| Data and persistence | Prisma with a SQLite schema; file-backed JSON fallback |
 | AI integration | Google Generative AI SDK (Gemini, optional) |
 | UI and motion | Radix UI, Phosphor Icons, Lucide, Framer Motion, GSAP |
 
 ## Screenshots
 
-No application screenshots are currently committed. The deployed demo is available at [procure2-delta.vercel.app](https://procure2-delta.vercel.app/).
+No application screenshots are currently committed. The repository includes the Procure logo (`public/procure-logo-new.png`); you can also explore the [live demo](https://procure2-delta.vercel.app/).
 
 ## Workflow and architecture
 
-1. A user enters a procurement requirement in the dashboard.
-2. The Next.js API creates a requirement and runs structured extraction and research. Gemini is used when `GEMINI_API_KEY` is configured; deterministic local logic is used otherwise or when a Gemini request fails.
-3. The application searches and ranks the bundled standards records, then displays the analysis and any verification caveats.
-4. Matching supplier records are ranked against the requirement. Users can save a supplier, open a conversation, and submit a quote.
+```mermaid
+flowchart LR
+    A[Requirement text] --> B[Create requirement]
+    B --> C[Extract product and specifications]
+    C --> D[Research and clarification]
+    C --> E[Search bundled standards]
+    E --> F[Rank candidate standards]
+    D --> G[Analysis results]
+    F --> G
+    G --> H[Match sample suppliers]
+    H --> I[Favorites, conversations, and quotes]
+```
 
-The main implementation areas are the App Router pages and API handlers in `src/app/`, AI and data helpers in `src/lib/`, and the Prisma data model in `prisma/schema.prisma`. Supplier and standards reference data are bundled in `src/lib/standards/data/`.
+The main workflow is implemented in the Next.js App Router:
 
-## Installation
+1. The dashboard sends requirement text to the requirements API.
+2. The analysis page extracts structured fields. Gemini is used when `GEMINI_API_KEY` is configured; deterministic local extraction and research are used otherwise or when a Gemini request fails.
+3. Procure searches its bundled standards records and ranks the returned candidates. Gemini ranking is optional; keyword-based ranking is the fallback.
+4. The results link to sample supplier matches, where users can save a favorite, start a conversation, and submit a quote.
+
+The UI and API routes live in `src/app/`, shared components in `src/components/`, and data and analysis helpers in `src/lib/`. Bundled standards and supplier records are in `src/lib/standards/data/`.
+
+## Installation and setup
 
 ### Prerequisites
 
-- Node.js and npm
+- Node.js 20 or newer and npm
 - A Google Gemini API key only if you want to enable Gemini-backed analysis
 
-### Setup
+### Install
 
 ```bash
 git clone https://github.com/harshalbagul725-source/procure.git
@@ -81,22 +96,28 @@ cd procure
 npm install
 ```
 
-Copy the example environment file:
+Copy the example environment file to `.env`:
 
 ```powershell
 Copy-Item .env.example .env
 ```
 
-On macOS or Linux, use `cp .env.example .env` instead. The example file sets the SQLite `DATABASE_URL`; add a Gemini key if desired:
+On macOS or Linux, use:
+
+```bash
+cp .env.example .env
+```
+
+The example file sets `DATABASE_URL` to a local SQLite database. Add a Gemini key to enable Gemini-backed analysis:
 
 ```dotenv
 DATABASE_URL="file:./dev.db"
 GEMINI_API_KEY="your_google_ai_studio_key"
 ```
 
-`GEMINI_API_KEY` is optional. Without it, the application uses its deterministic local extraction and ranking paths.
+`GEMINI_API_KEY` is optional. Without it, the application uses deterministic local extraction, research, and standards ranking.
 
-The repository does not include Prisma migrations or a Prisma CLI configuration, so it does not define a Prisma database-bootstrap command. The Prisma schema, runtime storage code, and demo JSON fallback are in `prisma/` and `src/lib/db.ts`.
+The repository includes a Prisma schema and a JSON-backed fallback, but no Prisma migration or database-bootstrap script. It does not provide a database setup command.
 
 ## Run the project
 
@@ -106,23 +127,65 @@ Start the development server:
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000). The landing page links to the demo portal and requirement dashboard.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Available npm scripts:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run dev    # Start the development server
+npm run build  # Build for production
+npm run start  # Start the production server after building
+npm run lint   # Run ESLint
+```
 
-## Learn More
+## Environment variables
 
-To learn more about Next.js, take a look at the following resources:
+| Variable | Required | Purpose |
+| --- | --- | --- |
+| `DATABASE_URL` | For Prisma-backed storage | Database connection URL. `.env.example` uses a local SQLite file. |
+| `GEMINI_API_KEY` | No | Enables Gemini-backed requirement understanding, research, and candidate ranking. Deterministic local paths are used without it. |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Project structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```text
+.
+├── prisma/
+│   ├── dev.json                 # JSON-backed demo data store
+│   └── schema.prisma            # SQLite data model
+├── public/                      # Logos and static assets
+├── src/
+│   ├── app/
+│   │   ├── api/                 # Requirement, supplier, favorite, and conversation APIs
+│   │   ├── analysis/[id]/       # Requirement understanding and results
+│   │   ├── conversations/       # Supplier conversations and quotes
+│   │   ├── dashboard/           # Requirement entry point
+│   │   └── suppliers/           # Supplier views
+│   ├── components/              # Landing, layout, and shared UI
+│   └── lib/
+│       ├── ai/                  # Requirement understanding and ranking
+│       └── standards/           # Standards lookup and bundled reference data
+├── .env.example
+├── package.json
+└── README.md
+```
 
-## Deploy on Vercel
+## Future improvements
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Potential next steps—not current capabilities—include:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Implement document upload and tender-file extraction.
+- Add production authentication and role-based access control.
+- Expand the standards and supplier data and define a robust verification and update process.
+- Add automated tests for requirement analysis, matching, and API workflows.
+- Document and validate a complete Prisma database provisioning and migration workflow.
+
+## Contributing
+
+Contributions are welcome. Open an issue to discuss a change, then submit a focused pull request with a clear description. Before opening a pull request, run:
+
+```bash
+npm run lint
+npm run build
+```
+
+There is currently no test script defined in `package.json`.
