@@ -106,64 +106,23 @@ Start the development server:
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in a browser. The landing page leads to the demo portal and dashboard.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-Other scripts defined in `package.json`:
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-```bash
-npm run build  # Build for production
-npm run start  # Start the production server after building
-npm run lint   # Run ESLint
-```
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Environment variables
+## Learn More
 
-| Variable | Required | Purpose |
-| --- | --- | --- |
-| `DATABASE_URL` | For Prisma-backed storage | Database URL; `.env.example` uses a local SQLite file (`file:./dev.db`). |
-| `GEMINI_API_KEY` | No | Enables Gemini-backed requirement understanding, research, and standards ranking. Without a key, local deterministic paths are used. |
+To learn more about Next.js, take a look at the following resources:
 
-## Project structure
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-```text
-.
-├── prisma/
-│   ├── dev.json                 # Demo JSON data store
-│   └── schema.prisma            # SQLite data model
-├── public/                      # Logos and static assets
-├── src/
-│   ├── app/
-│   │   ├── api/                 # Requirement, supplier, favorite, and conversation APIs
-│   │   ├── analysis/[id]/       # Requirement understanding and results
-│   │   ├── conversations/       # Supplier conversations and quotes
-│   │   ├── dashboard/           # Requirement entry point
-│   │   └── suppliers/           # Supplier views
-│   ├── components/              # Landing, layout, and shared UI
-│   └── lib/
-│       ├── ai/                  # Requirement understanding and ranking
-│       └── standards/           # Standards lookup and bundled data
-├── .env.example
-├── package.json
-└── README.md
-```
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Future improvements
+## Deploy on Vercel
 
-These are possible next steps, not features currently provided by the project:
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-- Implement real document upload and tender-file extraction.
-- Add production authentication and role-based authorization.
-- Expand the standards and supplier datasets and establish a reliable update and verification process.
-- Add automated tests for requirement analysis, matching, and API workflows.
-- Document and validate a complete Prisma database setup and migration workflow.
-
-## Contributing
-
-Contributions are welcome. Open an issue to discuss a change, then submit a focused pull request with a clear description. Before opening a pull request, run:
-
-```bash
-npm run lint
-npm run build
-```
-
-There is no test script currently defined in `package.json`.
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
